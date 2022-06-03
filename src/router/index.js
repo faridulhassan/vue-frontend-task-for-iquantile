@@ -1,11 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
-import LoginView from "../views/LoginView.vue";
+import LoginView from "../views/LoginRegistration/LoginView.vue";
 
 const routes = [
     {
         path: "/",
-        name: "login",
+        name: "home",
         component: LoginView
+    },
+    {
+        path: "/add-product",
+        name: "add-product",
+        component: () => import("../views/ProductAdd/ProductAddView.vue")
+    },
+    {
+        path: "/products",
+        name: "products",
+        component: () => import("../views/ProductListView.vue")
     },
     {
         path: "/cart",
