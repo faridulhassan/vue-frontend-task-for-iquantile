@@ -1,6 +1,7 @@
 # Vue Frontend Task for IQuarantile
 
 ### Github: [https://github.com/faridulhassan/vue-frontend-task-for-iquantile](https://github.com/faridulhassan/vue-frontend-task-for-iquantile)
+### Live: [https://vue-frontend-task-for-iquantile.netlify.app](https://vue-frontend-task-for-iquantile.netlify.app)
 
 ## Project setup
 ```
