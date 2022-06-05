@@ -19,7 +19,6 @@ export default {
         const store = useStore();
         const router = useRouter();
         function handleRegistration(fieldsValue) {
-            console.log(fieldsValue);
             router.push("/add-product");
             store.dispatch("userStore/addUser", fieldsValue);
         }

@@ -31,7 +31,6 @@ export default {
 
         /* Functions */
         const handleSearchFilter = (searchFilterValue) => {
-            console.log(searchFilterValue);
             filteredProducts.value = products.value.filter((product) => {
                 let isMatched = true;
                 for (let [key, value] of Object.entries(searchFilterValue)) {
@@ -66,7 +65,6 @@ export default {
 
                 return isMatched;
             });
-            console.log(filteredProducts);
         };
         return {
             products,

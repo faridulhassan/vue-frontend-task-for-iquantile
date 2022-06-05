@@ -10,7 +10,7 @@
                 class="px-2 py-2 h-12 leading-normal block w-full text-gray-800 bg-white font-sans rounded-lg text-left appearance-none outline-none"
                 :class="[
                     {
-                        'border-red-400': errors.length,
+                        'border-red-400': error,
                         'pl-12': withIcon === true,
                         'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none': disabled
                     },
@@ -20,17 +20,18 @@
                 :value="modelValue"
                 @input="onInput"
                 :disabled="disabled"
+                :required="required"
             >
                 <template v-if="tag === 'select' && options.length">
                     <option v-for="option in options" :value="option.value" :selected="!!option.selected">{{ option.name }}</option>
                 </template>
             </component>
 
-            <div v-if="errors.length" class="text-red-600 mt-1 text-sm">
-                {{ errors[0] }}
+            <div v-if="error" class="text-red-600 mt-1 text-sm">
+                {{ errorMessage }}
             </div>
 
-            <svg class="absolute text-red-600 fill-current" style="top: 12px; right: 12px" v-if="errors.length" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <svg class="absolute text-red-600 fill-current" style="top: 12px; right: 12px" v-if="error" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M11.953,2C6.465,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.493,2,11.953,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z" />
             </svg>
 
@@ -42,7 +43,7 @@
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { nanoid } from "nanoid";
 export default defineComponent({
     name: "InputField",
@@ -73,9 +74,9 @@ export default defineComponent({
             default: () => []
         },
         label: String,
-        errors: {
-            type: Array,
-            default: () => []
+        errorMessage: {
+            type: String,
+            default: "This field is required"
         },
         withIcon: {
             type: Boolean,
@@ -84,6 +85,14 @@ export default defineComponent({
         bordered: {
             type: Boolean,
             default: true
+        },
+        required: {
+            type: Boolean,
+            default: false
+        },
+        outerValidate: {
+            type: Function,
+            required: false
         }
     },
     emmits: ["update:modelValue"],
@@ -95,16 +104,23 @@ export default defineComponent({
                 "border bg-gray-200 focus:bg-white": props.bordered === false
             };
         });
-
+        const error = ref(false);
         /* Methods */
         function onInput(e) {
             context.emit("update:modelValue", e.target.value);
         }
+        const validate = function () {
+            const _value = props.modelValue.trim();
+            error.value = props.outerValidate ? props.outerValidate(_value) : props.required && !_value.length;
+            return !error.value;
+        };
         /* Return */
 
         return {
             classes,
-            onInput
+            error,
+            onInput,
+            validate
         };
     }
 });

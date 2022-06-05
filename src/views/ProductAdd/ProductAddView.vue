@@ -19,7 +19,6 @@ export default {
         const userId = computed(() => store.getters["userStore/userId"]);
 
         function addProduct(product) {
-            console.log(product);
             store.dispatch("productStore/addProduct", product);
         }
 
