@@ -1,10 +1,12 @@
 <template>
     <div>
-        <ProductAddForm :onSubmit="addProduct" />
+        <ProductAddForm :onSubmit="addProduct" :userId="userId" />
     </div>
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
 import ProductAddForm from "./ProductAddForm.vue";
 export default {
     name: "ProductAddView",
@@ -12,12 +14,18 @@ export default {
         ProductAddForm
     },
     setup() {
+        const store = useStore();
+
+        const userId = computed(() => store.getters["userStore/userId"]);
+
         function addProduct(product) {
             console.log(product);
+            store.dispatch("productStore/addProduct", product);
         }
 
         return {
-            addProduct
+            addProduct,
+            userId
         };
     }
 };

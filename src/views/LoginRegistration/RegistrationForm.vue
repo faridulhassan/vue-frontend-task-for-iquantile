@@ -3,24 +3,24 @@
         <form @submit.prevent="handleSubmit">
             <h2 class="text-2xl font-bold mb-4">Register</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <text-field label="Name" name="name" v-model="name"></text-field>
-                <text-field label="Email" name="email" type="email" v-model="email"></text-field>
-                <text-field label="Password" name="password" type="password" v-model="password"></text-field>
-                <text-field label="Confirm Password" name="confirmPassword" type="password" v-model="confirmPassword"></text-field>
+                <input-field label="Name" name="name" v-model="fields.name"></input-field>
+                <input-field label="Email" name="email" type="email" v-model="fields.email"></input-field>
+                <input-field label="Password" name="password" type="password" v-model="fields.password"></input-field>
+                <input-field label="Confirm Password" name="confirmPassword" type="password" v-model="fields.confirmPassword"></input-field>
             </div>
             <Button type="submit"> Submit</Button>
         </form>
     </div>
 </template>
 <script>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import Button from "../../components/Button.vue";
-import TextField from "../../components/TextField.vue";
+import InputField from "../../components/InputField.vue";
 
 export default {
     name: "RegistrationForm",
     components: {
-        TextField,
+        InputField,
         Button
     },
     props: {
@@ -30,27 +30,23 @@ export default {
         }
     },
     setup(props) {
-        const name = ref(""),
-            email = ref(""),
-            password = ref(""),
-            confirmPassword = ref("");
+        const fields = reactive({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
+        });
 
         function handleSubmit() {
             if (props.onSubmit) {
                 props.onSubmit({
-                    name: name.value,
-                    email: email.value,
-                    password: password.value,
-                    confirmPassword: confirmPassword.value
+                    ...fields
                 });
             }
         }
 
         return {
-            name,
-            email,
-            password,
-            confirmPassword,
+            fields,
             handleSubmit
         };
     }

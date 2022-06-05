@@ -2,7 +2,8 @@
     <div>
         <label v-if="label" class="form-label block mb-1 font-semibold text-gray-700" :for="id">{{ label }}</label>
         <div class="relative">
-            <input
+            <component
+                :is="tag !== 'input' ? tag : 'input'"
                 :id="id"
                 ref="input"
                 v-bind="$attrs"
@@ -10,14 +11,21 @@
                 :class="[
                     {
                         'border-red-400': errors.length,
-                        'pl-12': withIcon === true
+                        'pl-12': withIcon === true,
+                        'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none': disabled
                     },
                     classes
                 ]"
-                :type="type"
+                :type="tag === 'select' ? null : type"
                 :value="modelValue"
                 @input="onInput"
-            />
+                :disabled="disabled"
+            >
+                <template v-if="tag === 'select' && options.length">
+                    <option v-for="option in options" :value="option.value" :selected="!!option.selected">{{ option.name }}</option>
+                </template>
+            </component>
+
             <div v-if="errors.length" class="text-red-600 mt-1 text-sm">
                 {{ errors[0] }}
             </div>
@@ -37,7 +45,7 @@
 import { defineComponent, computed } from "vue";
 import { nanoid } from "nanoid";
 export default defineComponent({
-    name: "TextField",
+    name: "InputField",
 
     inheritAttrs: false,
 
@@ -52,7 +60,18 @@ export default defineComponent({
             type: String,
             default: "text"
         },
+        tag: {
+            type: String,
+            default: "input"
+        },
+        disabled: {
+            type: Boolean
+        },
         modelValue: String,
+        options: {
+            type: Array,
+            default: () => []
+        },
         label: String,
         errors: {
             type: Array,
